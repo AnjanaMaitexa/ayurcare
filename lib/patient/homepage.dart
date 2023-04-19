@@ -1,3 +1,4 @@
+import 'package:ayurvedichospital/patient/complaints/complaints.dart';
 import 'package:ayurvedichospital/patient/model/homemodel.dart';
 import 'package:ayurvedichospital/patient/userprofile.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -113,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.task_rounded), title: Text("Complaints"),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Complaints()),);
               },
             ),
             ListTile(

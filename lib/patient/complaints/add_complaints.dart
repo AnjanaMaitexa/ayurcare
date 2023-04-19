@@ -1,4 +1,5 @@
 
+import 'package:ayurvedichospital/patient/complaints/complaints.dart';
 import 'package:flutter/material.dart';
 
 class AddComplaint extends StatefulWidget {
@@ -19,10 +20,14 @@ class _AddComplaintState extends State<AddComplaint> {
 
   @override
   Widget build(BuildContext context) {
+
+    double w=MediaQuery.of(context).size.width;
+    double h=MediaQuery.of(context).size.height;
+
     return Scaffold(
         backgroundColor: Color(0xF5FFFFFF) ,
         appBar: AppBar(
-          title: Text("Complaint Management"),
+          title: Text(" Complaints"),
           backgroundColor: Colors.lightBlueAccent,
           leading: IconButton(onPressed: () {
 
@@ -103,6 +108,23 @@ class _AddComplaintState extends State<AddComplaint> {
                   ),
 
 
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Complaints()));
+                    },
+                    child: Container(
+                      width: w*0.5,
+                      height:h*0.08,
+                      color:  Color(0xFF772F16),
+                      child: Center(
+                        child: Text("SignIn",style:TextStyle(
+                            fontSize:36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                        )),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
