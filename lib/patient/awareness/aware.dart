@@ -1,31 +1,28 @@
 
-import 'package:ayurvedichospital/patient/complaints/add_complaints.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
 
-class Complaints extends StatefulWidget {
-  const Complaints({Key? key}) : super(key: key);
+class Awareness extends StatefulWidget {
+  const Awareness({Key? key}) : super(key: key);
 
   @override
-  State<Complaints> createState() => _ComplaintsState();
+  State<Awareness> createState() => _AwarenessState();
 }
 
-class _ComplaintsState extends State<Complaints> {
-  List complaints=["comp1","comp2","comp3","com4"];
-  List description=["desc1","desc2","desc3","desc4"];
+class _AwarenessState extends State<Awareness> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xF5DCEEFD) ,
       appBar: AppBar(
-        title: Text("Complaint Management",style: TextStyle(color: Color(0xFF8F371B)),),
+        title: Text("Awareness",style: TextStyle(color: Color(0xFF8F371B)),),
         backgroundColor: Colors.white ,
         leading:IconButton(onPressed:(){
-         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
         },
             icon: Icon(Icons.arrow_back,color: Color(0xFF8F371B))),
       ),
-      body: Container(
+     body: Container(
 
         child: SingleChildScrollView(
           physics: ScrollPhysics(),
@@ -33,8 +30,8 @@ class _ComplaintsState extends State<Complaints> {
               children:<Widget> [
 
                 Padding(
-                  padding: const EdgeInsets.only(top:15.0),
-                  child: Text("Complaints",style: TextStyle(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text("Awareness",style: TextStyle(
                       fontSize:26,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF8F371B)
@@ -44,22 +41,24 @@ class _ComplaintsState extends State<Complaints> {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap:true,
-                  itemCount: complaints.length,
+                  itemCount:10,
                   itemBuilder: (context,index){
                     return Card(
                         child:Container(
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.lightBlueAccent,
+                                    backgroundImage:AssetImage("images/aware.jpg" ,),),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(complaints[index]),
-                                        Text(description[index]),
+                                        Text("News"),
+                                        Text("Description"),
                                       ],
                                     ),
 
@@ -80,17 +79,8 @@ class _ComplaintsState extends State<Complaints> {
         ),
 
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AddComplaint(),
-          ));
-        },
-        tooltip: 'Add Complaints',
-        child: const Icon(Icons.add),
-      ),
+
+
     );
-
   }
-
 }

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:ayurvedichospital/Widgets/textformfield.dart';
+import 'package:ayurvedichospital/api.dart';
+import 'package:ayurvedichospital/loginpage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -27,6 +32,66 @@ class _SignUpState extends State<SignUp> {
   List images = ["g.png", "t.png", "f.png"];
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    ageController.dispose();
+    genController.dispose();
+    addController.dispose();
+    phnController.dispose();
+    emailController.dispose();
+    placeController.dispose();
+    postController.dispose();
+    pinController.dispose();
+    userController.dispose();
+    pwdController.dispose();
+    cpwdController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+bool _isLoading=false;
+  void registerUser()async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    var data = {
+      "patientusername": userController.text.trim(),
+      "patientpassword": pwdController.text.trim(),
+      "patientname": nameController.text.trim(),
+      "patientage": ageController.text.trim(),
+      "patientgender": gender.toString(),
+      "patientemail": emailController.text.trim(),
+      "patientphone": phnController.text,
+      "patientaddress": addController.text,
+      "patientplace": placeController.text,
+      "patientpost": postController.text,
+      "patientpincode": pinController.text,
+    };
+    print("patient data${data}");
+    var res = await Api().authData(data,'/api/patient_register');
+    var body = json.decode(res.body);
+    print('res${res}');
+    if(body['success']==true)
+    {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+
+    }
+    else
+    {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -116,9 +181,9 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(height: 10,),
                     textContainer("Username",userController),
                     SizedBox(height: 10,),
-                    textContainer("Password",pwdController),
+                    textPwdContainer("Password",pwdController),
                     SizedBox(height: 10,),
-                    textContainer("Confirm password",cpwdController),
+                    textPwdContainer("Confirm password",cpwdController),
 
 
                   ],
@@ -128,6 +193,7 @@ class _SignUpState extends State<SignUp> {
             SizedBox(height: 70,),
             GestureDetector(
               onTap: (){
+                registerUser();
               },
               child: Container(
                 width: w*0.5,

@@ -28,9 +28,9 @@ class _AddComplaintState extends State<AddComplaint> {
         backgroundColor: Color(0xF5FFFFFF) ,
         appBar: AppBar(
           title: Text(" Complaints"),
-          backgroundColor: Colors.lightBlueAccent,
+          backgroundColor: Color(0xFF8F371B),
           leading: IconButton(onPressed: () {
-
+            Navigator.pop(context);
           },
               icon: Icon(Icons.arrow_back)),
         ),
@@ -44,6 +44,14 @@ class _AddComplaintState extends State<AddComplaint> {
 
                 children: [
 
+                  SizedBox(height: 30),
+                  Text(
+                    'Add Complaint',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color:Color(0xFF8F371B),),
+                  ),
                   SizedBox(height: 10),
                   Align(
                     alignment: Alignment.topLeft,
@@ -85,27 +93,7 @@ class _AddComplaintState extends State<AddComplaint> {
                             borderRadius: BorderRadius.circular(5)),
                         hintText: 'Description'),
                   ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Location',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.black38),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _locontroller,
-                    // controller: _vehicleNoController,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        hintText: 'Location'),
-                  ),
+                  SizedBox(height: 100),
 
 
                   GestureDetector(
@@ -117,7 +105,7 @@ class _AddComplaintState extends State<AddComplaint> {
                       height:h*0.08,
                       color:  Color(0xFF772F16),
                       child: Center(
-                        child: Text("SignIn",style:TextStyle(
+                        child: Text("Submit",style:TextStyle(
                             fontSize:36,
                             fontWeight: FontWeight.bold,
                             color: Colors.white

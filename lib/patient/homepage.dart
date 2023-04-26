@@ -1,8 +1,15 @@
+import 'package:ayurvedichospital/patient/DiseaseDetails/detail.dart';
+import 'package:ayurvedichospital/patient/doctors/addappointment.dart';
+import 'package:ayurvedichospital/patient/appointment/viewappointment.dart';
+import 'package:ayurvedichospital/patient/awareness/aware.dart';
 import 'package:ayurvedichospital/patient/complaints/complaints.dart';
+import 'package:ayurvedichospital/patient/doctors/doctors.dart';
 import 'package:ayurvedichospital/patient/model/homemodel.dart';
+import 'package:ayurvedichospital/patient/treatment/treatment.dart';
 import 'package:ayurvedichospital/patient/userprofile.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -13,67 +20,119 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-
     List gridlist = [
-      HomeModel(image: "images/aware.jpg",title:"Awareness"),
-      HomeModel(image: "images/disease.jpg",title:"DiseaseDetails"),
-      HomeModel(image: "images/treat.jpg",title:"TreatmentDetails"),
-      HomeModel(image: "images/dc.jpg",title:"Doctors"),
-      HomeModel(image: "images/booking.jpg",title:"Appointment"),
-
+      HomeModel(image: "images/aware.jpg", title: "Awareness"),
+      HomeModel(image: "images/disease.jpg", title: "Disease\nDetails"),
+      HomeModel(image: "images/treat.jpg", title: "Treatment\nDetails"),
+      HomeModel(image: "images/dc.jpg", title: "Doctors"),
+      HomeModel(image: "images/booking.jpg", title: "Appointments"),
     ];
 
-    double w=MediaQuery.of(context).size.width;
-    double h=MediaQuery.of(context).size.height;
-    return  Scaffold(
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+    return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF8F371B),
-          title: Text("Ayurcare",style: TextStyle(color: Colors.white),)),
+          backgroundColor: Color(0xFF8F371B),
+          title: Text(
+            "Ayurcare",
+            style: TextStyle(color: Colors.white),
+          )),
       body: SingleChildScrollView(
-        physics:ScrollPhysics() ,
+        physics: ScrollPhysics(),
         child: Column(
           children: [
             CarouselSlider(
               options: CarouselOptions(height: 200.0),
-              items: ["images/la.jpg","images/bg2.jpg","images/bg3.jpg","images/la.jpg"].map((i) {
+              items: [
+                "images/la.jpg",
+                "images/bg2.jpg",
+                "images/bg3.jpg",
+                "images/la.jpg"
+              ].map((i) {
                 return Builder(
                   builder: (BuildContext context) {
-                    return  Container(
+                    return Container(
                       width: w,
-                      height:00,
+                      height: 00,
                       decoration: BoxDecoration(
-                          image:DecorationImage(
-                              image: AssetImage(
-                                  "$i"
-                              ),
-                              fit: BoxFit.cover
-                          )
-                      ),
+                          image: DecorationImage(
+                              image: AssetImage("$i"), fit: BoxFit.cover)),
                     );
                   },
                 );
               }).toList(),
             ),
             GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 padding: const EdgeInsets.all(10),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent:170,
+                    maxCrossAxisExtent: 170,
                     childAspectRatio: 2 / 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10),
                 itemCount: gridlist.length,
                 itemBuilder: (BuildContext ctx, index) {
-                  return Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor:Colors.white,
-                  backgroundImage: AssetImage(gridlist[index].image),
-                  radius: 40.0,),
-                    Text(gridlist[index].title,style: TextStyle(fontFamily:'LuxuriousRoman',fontSize: 18,
-                    color: Color(0xFF8F371B),),),
-                  ],
+                  return GestureDetector(
+                    onTap: () {
+                      switch (index) {
+                        case 0:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Awareness()),
+                          );
+                          break;
+                        case 1:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DiseaseDetail()),
+                          );
+                          break;
+                        case 2:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TreatmentDetails()),
+                          );
+                          break;
+                        case 3:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DoctorsList()),
+                          );
+                          break;
+                        case 4:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewAppointment()),
+                          );
+                          break;
+                        // Add more cases for additional pages
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage(gridlist[index].image),
+                          radius: 40.0,
+                        ),
+                        Text(
+                          gridlist[index].title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'LuxuriousRoman',
+                            fontSize: 18,
+                            color: Color(0xFF8F371B),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }),
           ],
@@ -85,52 +144,49 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
-
               accountName: Text("User"),
               accountEmail: Text("user@gmail.com"),
               decoration: BoxDecoration(
-                color:  Color(0xFF8F371B), // Set your desired header color here
+                color: Color(0xFF8F371B), // Set your desired header color here
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage("images/profile1.png"),
               ),
-
             ),
-
             ListTile(
-              leading: Icon(Icons.home), title: Text("Home"),
+              leading: Icon(Icons.home),
+              title: Text("Home"),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()),);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Profile"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.task_rounded),
+              title: Text("Complaints"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Complaints()),
+                );
               },
             ),
 
             ListTile(
-              leading: Icon(Icons.person), title: Text("Profile"),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>UserProfile()),);
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.task_rounded), title: Text("Complaints"),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Complaints()),);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings), title: Text("Settings"),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.contacts), title: Text("Contact Us"),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout), title: Text("Logout"),
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
               onTap: () {
                 Navigator.pop(context);
               },
