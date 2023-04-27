@@ -86,7 +86,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
             ]),
 
       ),
-      floatingActionButton: FloatingActionButton(
+   /*   floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Appointment(),
@@ -94,7 +94,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
         },
         tooltip: 'Appointment',
         child: const Icon(Icons.add),
-      ),
+      ),*/
     );
   }
 }

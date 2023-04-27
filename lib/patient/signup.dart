@@ -70,7 +70,7 @@ bool _isLoading=false;
       "patientpincode": pinController.text,
     };
     print("patient data${data}");
-    var res = await Api().authData(data,'/api/patient_register');
+    var res = await Api().authData(data,'api/patient_register');
     var body = json.decode(res.body);
     print('res${res}');
     if(body['success']==true)

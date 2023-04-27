@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:ayurvedichospital/patient/DiseaseDetails/detail.dart';
 import 'package:ayurvedichospital/patient/doctors/addappointment.dart';
 import 'package:ayurvedichospital/patient/appointment/viewappointment.dart';
@@ -18,6 +20,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<String> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+  Future<void> fetchData() async {
+    final response =
+    await http.get(Uri.parse('https://example.com/data.json'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        items = List<String>.from(data);
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List gridlist = [
@@ -25,9 +47,10 @@ class _MyHomePageState extends State<MyHomePage> {
       HomeModel(image: "images/disease.jpg", title: "Disease\nDetails"),
       HomeModel(image: "images/treat.jpg", title: "Treatment\nDetails"),
       HomeModel(image: "images/dc.jpg", title: "Doctors"),
-      HomeModel(image: "images/booking.jpg", title: "Appointments"),
+      HomeModel(image: "images/booking.jpg", title: "View\nAppointments"),
+      HomeModel(image: "images/package.jpg", title: "Packages"),
+      HomeModel(image: "images/herb.png", title: "Products"),
     ];
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -47,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 "images/la.jpg",
                 "images/bg2.jpg",
                 "images/bg3.jpg",
-                "images/la.jpg"
+                "images/la.jpg",
               ].map((i) {
                 return Builder(
                   builder: (BuildContext context) {
@@ -121,14 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           backgroundImage: AssetImage(gridlist[index].image),
                           radius: 40.0,
                         ),
-                        Text(
-                          gridlist[index].title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: 'LuxuriousRoman',
-                            fontSize: 18,
-                            color: Color(0xFF8F371B),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            gridlist[index].title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'LuxuriousRoman',
+                              fontSize: 18,
+                              color: Color(0xFF8F371B),
+                            ),
                           ),
                         ),
                       ],

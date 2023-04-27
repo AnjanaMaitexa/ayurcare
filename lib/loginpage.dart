@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     if (body['success'] == true) {
       print(body);
 
-     // role = body['data']['role'];
+      role = body['data']['role'];
       status =  body['data']['l_status'];
 
 
@@ -237,8 +237,8 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 70,),
             GestureDetector(
               onTap: (){
-             //   _pressLoginButton();
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+              _pressLoginButton();
+               // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
               },
               child: Container(
                 width: w*0.5,

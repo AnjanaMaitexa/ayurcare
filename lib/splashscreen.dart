@@ -1,8 +1,11 @@
 
 import 'dart:async';
 
+import 'package:ayurvedichospital/doctor/doctorhome.dart';
 import 'package:ayurvedichospital/loginpage.dart';
+import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -13,6 +16,43 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  String user = "patient";
+  String doctor = "doctor";
+
+  String storedvalue = "1";
+   String role="";
+  late SharedPreferences localStorage;
+
+
+  Future<void> checkRoleAndNavigate() async {
+    localStorage = await SharedPreferences.getInstance();
+    role = (localStorage.getString('role') ?? '');
+    print(role);
+    if (user == role) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    } else if (doctor == role) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => DoctHome(),
+      ));
+    }  else  {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LoginPage()));
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    startTime();
+  }
+
+  startTime() async {
+    var duration = new Duration(seconds: 4);
+    return Timer(duration, checkRoleAndNavigate);
+  }
+/*
   @override
   void initState() {
     // TODO: implement initState
@@ -24,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
             )
         )
     );
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
 
