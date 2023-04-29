@@ -1,7 +1,11 @@
 
+import 'dart:convert';
+
+import 'package:ayurvedichospital/api.dart';
 import 'package:ayurvedichospital/patient/doctors/addappointment.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DoctorsList extends StatefulWidget {
   const DoctorsList({Key? key}) : super(key: key);
@@ -18,11 +22,71 @@ class _DoctorsListState extends State<DoctorsList> {
   List departs=["depart1","depart2","depart3","depart4","depart5","depart4","depart5"];
   List images=["images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg"];
 
+  List _loaddata = [];
+  bool isLoading = false;
+  late int disease_id;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //  getLogin();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    var res = await Api()
+        .getData('api/get_alldoctor');
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loaddata = items;
+
+      });
+    } else {
+      setState(() {
+        _loaddata = [];
+        Fluttertoast.showToast(
+          msg:"Currently there is no data available",
+          backgroundColor: Colors.grey,
+        );
+      });
+    }
+  }
+  _fetchDataSpecial(String text) async {
+    var data = {
+      "query": text,
+    };
+    print('query${data}');
+    var res = await Api()
+        .authData(data,'api/patientsearch_doctor');
+    print('res${res}');
+    var body = json.decode(res.body);
+    print('res${body}');
+
+    if(body['success']==true)
+    {
+      var items = json.decode(res.body)['data'];
+      print('specialdata${items}');
+      setState(() {
+        _loaddata = items;
+
+      });
+    } else {
+      setState(() {
+        _loaddata = [];
+        Fluttertoast.showToast(
+          msg:"Currently there is no data available",
+          backgroundColor: Colors.grey,
+        );
+      });
+    }
+  }
   TextEditingController departmentController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -62,7 +126,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   onFieldSubmitted: (String text){
                                     setState(() {
                                       department=text;
-                                    //  getCityWeather(text);
+                                      _fetchDataSpecial(text);
                                       setState(() {
                                         isLoaded=false;
                                       });
@@ -72,7 +136,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   cursorColor:Colors.white,
                                   style:TextStyle(
                                     fontSize:20,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.black,
                                   ),
                                   decoration:InputDecoration(
                                       hintText: 'Search department',
@@ -92,77 +156,21 @@ class _DoctorsListState extends State<DoctorsList> {
                         ),
                       ),
 
-
-                     /* SizedBox(
-                        height: 80, ),
-                      Text(cityname,style: (TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700
-                      )),),
-                      Text("Saturday,Feb,2021",style: (TextStyle(
-                        fontSize:16,
-                        color: Colors.white,
-                      )),),
-                      SizedBox(
-                        height:130, ),
-                      Padding(
-                        padding: EdgeInsets.only(left:39.0),
-                        child: Icon(Icons.cloud,
-                            size: 50,
-                            color: Colors.white
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text('cloud',style: (TextStyle(
-                          fontSize:16,
-                          color: Colors.white,
-                        )),),
-                      ),
-                      SizedBox(
-                        height:10, ),
-                      Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text('Pressure:${pressure?.toInt()}hPa',style: (TextStyle(
-                          fontSize:16,
-                          color: Colors.white,
-                        )),),
-
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text('Humidity:${humidity?.toInt()}%',style: (TextStyle(
-                          fontSize:16,
-                          color: Colors.white,
-                        )),),
-
-                      ),
-                      SizedBox(
-                        height:120, ),
-                      Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text('${temp?.toInt()}°C',style: (TextStyle(
-                            fontSize:90,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
-                        )),),
-                      ),*/
                       SizedBox(height: 10,),
                       ListView.builder(
                         shrinkWrap:true,
-                        itemCount: doctors.length,
+                        itemCount: _loaddata.length,
                         itemBuilder: (context,index){
                           return Card(
                             child: ListTile(
                               leading:  CircleAvatar(
                                 backgroundColor: Colors.lightBlueAccent,
-                                backgroundImage:AssetImage(images[index]) ,),
-                              title:  Text(doctors[index],
+                                backgroundImage:NetworkImage("http://127.0.0.1:8000"+_loaddata[index]['doctorprofile_photo']),),
+                              title:  Text(_loaddata[index]['doctorname'],
                                 style:TextStyle(
                                   fontSize: 18,
                                 ) ,),
-                              subtitle: Text(departs[index],
+                              subtitle: Text(_loaddata[index]['doctorspecialization'],
                                 style:TextStyle(
                                   fontSize: 18,
                                 ) ,),

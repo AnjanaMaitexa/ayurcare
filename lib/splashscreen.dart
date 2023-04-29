@@ -1,7 +1,7 @@
 
 import 'dart:async';
 
-import 'package:ayurvedichospital/doctor/doctorhome.dart';
+import 'package:ayurvedichospital/doctor/dochomepage.dart';
 import 'package:ayurvedichospital/loginpage.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           context, MaterialPageRoute(builder: (context) => MyHomePage()));
     } else if (doctor == role) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => DoctHome(),
+        builder: (context) => DoHomePage(),
       ));
     }  else  {
       Navigator.pushReplacement(

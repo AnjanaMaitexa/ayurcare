@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:ayurvedichospital/patient/chat/chat.dart';
+import 'package:ayurvedichospital/patient/package/viewpackage.dart';
+import 'package:ayurvedichospital/patient/product/medicine_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:ayurvedichospital/patient/DiseaseDetails/detail.dart';
 import 'package:ayurvedichospital/patient/doctors/addappointment.dart';
@@ -20,25 +23,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> items = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-  Future<void> fetchData() async {
-    final response =
-    await http.get(Uri.parse('https://example.com/data.json'));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      setState(() {
-        items = List<String>.from(data);
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
       HomeModel(image: "images/booking.jpg", title: "View\nAppointments"),
       HomeModel(image: "images/package.jpg", title: "Packages"),
       HomeModel(image: "images/herb.png", title: "Products"),
+      HomeModel(image: "images/chat.png", title: "Chat"),
     ];
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -132,6 +117,27 @@ class _MyHomePageState extends State<MyHomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewAppointment()),
+                          );
+                          break;
+                          case 5:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewPackage()),
+                        );
+                        break;
+                        case 6:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Medicine()),
+                          );
+                          break;
+                        case 7:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Chat()),
                           );
                           break;
                         // Add more cases for additional pages

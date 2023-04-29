@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:ayurvedichospital/Widgets/background.dart';
 import 'package:ayurvedichospital/api.dart';
-import 'package:ayurvedichospital/doctor/doctorhome.dart';
+import 'package:ayurvedichospital/doctor/dochomepage.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:ayurvedichospital/patient/signup.dart';
 import 'package:flutter/gestures.dart';
@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
       } else if (doctor == role &&
           storedvalue == status) {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => DoctHome(),
+          builder: (context) => DoHomePage(),
         ));
      }else {
         Fluttertoast.showToast(
