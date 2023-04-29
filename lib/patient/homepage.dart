@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ayurvedichospital/patient/chat/chat.dart';
+import 'package:ayurvedichospital/patient/chat/chatlist.dart';
 import 'package:ayurvedichospital/patient/package/viewpackage.dart';
 import 'package:ayurvedichospital/patient/product/medicine_view.dart';
 import 'package:http/http.dart' as http;
@@ -137,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Chat()),
+                                builder: (context) => ChatList()),
                           );
                           break;
                         // Add more cases for additional pages

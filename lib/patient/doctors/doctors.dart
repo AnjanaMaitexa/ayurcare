@@ -18,9 +18,6 @@ class _DoctorsListState extends State<DoctorsList> {
 
   bool isLoaded=false;
   String department='';
-  List doctors=["doc1","doc2","doc3","doc4","doc5","doc4","doc5"];
-  List departs=["depart1","depart2","depart3","depart4","depart5","depart4","depart5"];
-  List images=["images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg","images/doc1.jpg"];
 
   List _loaddata = [];
   bool isLoading = false;

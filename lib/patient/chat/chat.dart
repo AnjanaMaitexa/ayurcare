@@ -3,6 +3,12 @@ import 'package:ayurvedichospital/patient/chat/chatMessageModel.dart';
 import 'package:flutter/material.dart';
 
 class Chat extends StatefulWidget {
+  late int id;
+  late String name;
+  late String image;
+
+  Chat({required this.id,required this.name,required this.image});
+
   @override
   State<Chat> createState() => _ChatState();
 }
@@ -50,12 +56,8 @@ class _ChatState extends State<Chat> {
                     width: 2,
                   ),
                   CircleAvatar(
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    maxRadius: 20,
-                  ),
+                    backgroundImage: NetworkImage(widget.image),),
+
                   SizedBox(
                     width: 12,
                   ),
@@ -65,7 +67,7 @@ class _ChatState extends State<Chat> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Chat",
+                         widget.name,
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
@@ -80,10 +82,7 @@ class _ChatState extends State<Chat> {
                       ],
                     ),
                   ),
-                  Icon(
-                    Icons.settings,
-                    color: Colors.black54,
-                  ),
+
                 ],
               ),
             ),

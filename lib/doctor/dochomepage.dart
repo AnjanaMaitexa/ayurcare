@@ -19,7 +19,7 @@ class _DoHomePageState extends State<DoHomePage> {
   @override
   Widget build(BuildContext context) {
     List gridlist = [
-      HomeModel(image: "images/aware.jpg", title: "Profile"),
+      HomeModel(image: "images/docpro.jpg", title: "Profile"),
       HomeModel(image: "images/booking.jpg", title: "Appointment\nDetails"),
       HomeModel(image: "images/treat.jpg", title: "Treatment\nDetails"),
       HomeModel(image: "images/chat.png", title: "Chat"),
