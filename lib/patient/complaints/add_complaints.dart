@@ -1,6 +1,12 @@
 
+import 'dart:convert';
+
+import 'package:ayurvedichospital/api.dart';
 import 'package:ayurvedichospital/patient/complaints/complaints.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddComplaint extends StatefulWidget {
   const AddComplaint({Key? key}) : super(key: key);
@@ -12,11 +18,50 @@ class AddComplaint extends StatefulWidget {
 class _AddComplaintState extends State<AddComplaint> {
   TextEditingController _compcontroller = TextEditingController();
   TextEditingController _descontroller = TextEditingController();
-  TextEditingController _locontroller = TextEditingController();
   bool _isLoading = false;
+  TextEditingController controller=TextEditingController();
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
+  late SharedPreferences localStorage;
+  late int user_id;
   final _formKey = GlobalKey<FormState>();
 
+  void registerComplaint()async {
+    localStorage = await SharedPreferences.getInstance();
+    user_id = (localStorage.getInt('user_id') ?? 0);
+    print('user_id ${user_id}');
+    setState(() {
+      _isLoading = true;
+    });
+
+    var data = {
+      "patient": user_id.toString(),
+      "complaint": _compcontroller.text,
+      "date": formattedDate,
+
+    };
+    print("patient data${data}");
+    var res = await Api().authData(data,'api/patientadd_complaints');
+    var body = json.decode(res.body);
+    print('res${res}');
+    if(body['success']==true)
+    {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Complaints()));
+    }
+    else
+    {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +143,8 @@ class _AddComplaintState extends State<AddComplaint> {
 
                   GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Complaints()));
+                      registerComplaint();
+
                     },
                     child: Container(
                       width: w*0.5,

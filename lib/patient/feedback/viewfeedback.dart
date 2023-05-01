@@ -3,23 +3,25 @@ import 'dart:convert';
 
 import 'package:ayurvedichospital/api.dart';
 import 'package:ayurvedichospital/patient/complaints/add_complaints.dart';
+import 'package:ayurvedichospital/patient/feedback/addfeed.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Complaints extends StatefulWidget {
-  const Complaints({Key? key}) : super(key: key);
+class ViewFeed extends StatefulWidget {
+  const ViewFeed({Key? key}) : super(key: key);
 
   @override
-  State<Complaints> createState() => _ComplaintsState();
+  State<ViewFeed> createState() => _ViewFeedState();
 }
 
-class _ComplaintsState extends State<Complaints> {
-  List complaints=["comp1","comp2","comp3","com4"];
-  List description=["desc1","desc2","desc3","desc4"];
-  List _loaddisease = [];
+class _ViewFeedState extends State<ViewFeed> {
+  List feedback = [];
   bool isLoading = false;
-  late int disease_id;
+  late SharedPreferences localStorage;
+  late int user_id;
 
   @override
   void initState() {
@@ -30,18 +32,20 @@ class _ComplaintsState extends State<Complaints> {
   }
 
   _fetchDisease() async {
+    localStorage = await SharedPreferences.getInstance();
+  user_id = (localStorage.getInt('user_id') ?? 0);
     var res = await Api()
-        .getData('api/patientadd_complaints');
+        .getData('api/patient_all_review');
     if (res.statusCode == 200) {
       var items = json.decode(res.body)['data'];
       print(items);
       setState(() {
-        _loaddisease = items;
+        feedback = items;
 
       });
     } else {
       setState(() {
-        _loaddisease = [];
+        feedback = [];
         Fluttertoast.showToast(
           msg:"Currently there is no data available",
           backgroundColor: Colors.grey,
@@ -54,10 +58,10 @@ class _ComplaintsState extends State<Complaints> {
     return Scaffold(
       backgroundColor: Color(0xF5DCEEFD) ,
       appBar: AppBar(
-        title: Text("Complaint Management",style: TextStyle(color: Color(0xFF8F371B)),),
+        title: Text("Feedback",style: TextStyle(color: Color(0xFF8F371B)),),
         backgroundColor: Colors.white ,
         leading:IconButton(onPressed:(){
-         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
         },
             icon: Icon(Icons.arrow_back,color: Color(0xFF8F371B))),
       ),
@@ -70,7 +74,7 @@ class _ComplaintsState extends State<Complaints> {
 
                 Padding(
                   padding: const EdgeInsets.only(top:15.0),
-                  child: Text("Complaints",style: TextStyle(
+                  child: Text("Feedback",style: TextStyle(
                       fontSize:26,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF8F371B)
@@ -80,7 +84,7 @@ class _ComplaintsState extends State<Complaints> {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap:true,
-                  itemCount: complaints.length,
+                  itemCount: feedback.length,
                   itemBuilder: (context,index){
                     return Card(
                         child:Container(
@@ -94,8 +98,24 @@ class _ComplaintsState extends State<Complaints> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(complaints[index]),
-                                        Text(description[index]),
+                                       Text("Feedback: "+feedback[index]['feedback']),
+                                        SizedBox(height: 10,),
+                                        RatingBar(
+                                          initialRating: 3,
+                                          itemCount:(double.parse(feedback[index]['rating']).toInt()) ,
+                                          itemSize: 20,
+                                          allowHalfRating: true,
+                                          ratingWidget: RatingWidget(
+                                            full: Icon(Icons.star, color: Colors.amber),
+                                            half: Icon(Icons.star_half, color: Colors.amber),
+                                            empty: Icon(Icons.star_border, color: Colors.amber),
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Text("Date: "+feedback[index]['date']),
                                       ],
                                     ),
 
@@ -119,14 +139,12 @@ class _ComplaintsState extends State<Complaints> {
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AddComplaint(),
+            builder: (context) => AddFeed(),
           ));
         },
         tooltip: 'Add Complaints',
         child: const Icon(Icons.add),
       ),
     );
-
   }
-
 }
