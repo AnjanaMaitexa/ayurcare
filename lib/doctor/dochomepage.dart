@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:ayurvedichospital/doctor/doprofile.dart';
 import 'package:ayurvedichospital/doctor/profile/profileview.dart';
 import 'package:ayurvedichospital/doctor/viewappointments/appoints.dart';
 import 'package:ayurvedichospital/doctor/viewtreatment/ViewTreatment.dart';
+import 'package:ayurvedichospital/loginpage.dart';
 import 'package:ayurvedichospital/patient/model/homemodel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoHomePage extends StatefulWidget {
   const DoHomePage({Key? key}) : super(key: key);
@@ -18,8 +21,10 @@ class _DoHomePageState extends State<DoHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    late SharedPreferences localStorage;
     List gridlist = [
-      HomeModel(image: "images/docpro.jpg", title: "Profile"),
+      HomeModel(image: "images/do.jpg", title: "Profile"),
       HomeModel(image: "images/booking.jpg", title: "Appointment\nDetails"),
       HomeModel(image: "images/treat.jpg", title: "Treatment\nDetails"),
       HomeModel(image: "images/chat.png", title: "Chat"),
@@ -32,7 +37,17 @@ class _DoHomePageState extends State<DoHomePage> {
           title: Text(
             "Ayurcare",
             style: TextStyle(color: Colors.white),
-          )),
+          ),
+        actions: [
+          IconButton(onPressed: () async {
+            localStorage = await SharedPreferences.getInstance();
+            localStorage.setBool('login', true);
+            Navigator.pushReplacement(context,
+                new MaterialPageRoute(builder: (context) => LoginPage()));
+
+          }, icon: Icon(Icons.logout))
+        ],
+      ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Column(

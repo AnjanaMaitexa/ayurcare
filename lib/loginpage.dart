@@ -24,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
   String user = "patient";
   String doctor = "doctor";
 
+  bool _obscuretext = true;
+  bool passwordVisible = false;
   String storedvalue = "1";
   late SharedPreferences localStorage;
   late int loginId ;
@@ -196,6 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: TextField(
                         controller: passCon,
+                        obscureText: passwordVisible,
                         decoration: InputDecoration(
                             hintText: "Password",
                             focusedBorder: OutlineInputBorder(
@@ -213,7 +216,19 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30)
-                            )
+                            ),
+                          suffixIcon: IconButton(
+                            icon: Icon(passwordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () {
+                              setState(
+                                    () {
+                                  passwordVisible = !passwordVisible;
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ayurvedichospital/loginpage.dart';
 import 'package:ayurvedichospital/patient/chat/chat.dart';
 import 'package:ayurvedichospital/patient/chat/chatlist.dart';
 import 'package:ayurvedichospital/patient/feedback/viewfeedback.dart';
@@ -16,6 +17,7 @@ import 'package:ayurvedichospital/patient/treatment/treatment.dart';
 import 'package:ayurvedichospital/patient/userprofile.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -28,6 +30,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    late SharedPreferences localStorage;
     List gridlist = [
       HomeModel(image: "images/aware.jpg", title: "Awareness"),
       HomeModel(image: "images/disease.jpg", title: "Disease\nDetails"),
@@ -231,8 +235,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                localStorage = await SharedPreferences.getInstance();
+                localStorage.setBool('login', true);
+                Navigator.pushReplacement(context,
+                    new MaterialPageRoute(builder: (context) => LoginPage()));
+
               },
             ),
           ],

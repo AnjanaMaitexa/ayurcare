@@ -1,16 +1,42 @@
 
+import 'dart:convert';
+
+import 'package:ayurvedichospital/api.dart';
+import 'package:ayurvedichospital/patient/appointment/viewappointment.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Appointment extends StatefulWidget {
-  const Appointment({Key? key}) : super(key: key);
+  int id;
+
+  Appointment({required this.id});
 
   @override
   State<Appointment> createState() => _AppointmentState();
 }
 
 class _AppointmentState extends State<Appointment> {
+String name="";
+String depart="";
+String app_time='';
+String token="";
+String image='';
+String specialized='';
+bool _isLoading=false;
+late int did;
+late int user_id;
 
+late SharedPreferences localStorage;
+final timeController = TextEditingController();
+@override
+void initState() {
+  // TODO: implement initState
+  super.initState();
+  _viewPro();
+}
   List department = ["Orthopaedic","Gynaecology","Cardiology","ENT"];
   String? selectdepart;
   DateTime selectedDate = DateTime.now();
@@ -23,12 +49,71 @@ class _AppointmentState extends State<Appointment> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        startDate='${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
+        startDate='${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
       });
     }
   }
+  Future<void> _viewPro() async {
 
+    did=widget.id;
+    var res = await Api()
+        .getData('api/single_doctor/' + did.toString());
+    var body = json.decode(res.body);
+    print(body);
+    setState(() {
+      name = body['data']['doctorname'];
+      depart = body['data']['doctorqualification'];
+      app_time = body['data']['doctor_available_time'];
+      image = body['data']['doctorprofile_photo'];
+      specialized=body['data']['doctorspecialization'];
+
+    });
+  }
+
+void addBooking()async {
+
+  did=widget.id;
+  localStorage = await SharedPreferences.getInstance();
+  user_id = (localStorage.getInt('user_id') ?? 0);
+  setState(() {
+    _isLoading = true;
+  });
+
+  var data = {
+    "doctor":did.toString() ,
+    "patient":user_id.toString(),
+    "appointment_date": startDate.toString(),
+    "appointment_time":timeController.text,
+     };
+  print(data);
+  // if(data.image){
+  //   var res = await Api().authData(data.image, '/upload');
+  //
+  // }
+  var res = await Api().authData(data, 'api/token_booking');
+  var body = json.decode(res.body);
+
+  if(body['success']==true)
+  {
+    print(body);
+
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewAppointment()));
+    Fluttertoast.showToast(
+      msg: body['message'].toString(),
+      backgroundColor: Colors.grey,
+    );
+  }
+  else
+  {
+    Fluttertoast.showToast(
+      msg: body['message'].toString(),
+      backgroundColor: Colors.grey,
+    );
+
+  }
+}
   late String startDate;
+
   @override
   Widget build(BuildContext context) {
 
@@ -49,6 +134,7 @@ class _AppointmentState extends State<Appointment> {
         color: const Color(0xFF8F371B) ,
         child: InkWell(
           onTap: () {
+            addBooking();
             //print('called on tap');
           },
           child: const SizedBox(
@@ -81,7 +167,7 @@ class _AppointmentState extends State<Appointment> {
                   CircleAvatar(
                     backgroundColor: Colors.lightBlueAccent,
                     radius: 50,
-                    backgroundImage:AssetImage("images/doc1.jpg") ,),
+                    backgroundImage:NetworkImage("http://127.0.0.1:8000"+image) ,),
                   SizedBox(
                     width: 10,
                   ),
@@ -91,12 +177,15 @@ class _AppointmentState extends State<Appointment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Name", style:TextStyle(
+                        Text(name, style:TextStyle(
                       fontSize: 23,color: Colors.white
                     ) ,),
-                        Text("Department", style:TextStyle(
+                        Text(depart, style:TextStyle(
                           fontSize: 18,color: Colors.white
                         ) ,),
+                        Text(specialized, style:TextStyle(
+                            fontSize: 18,color: Colors.white
+                        ) ,)
                       ],
                     ),
                   )
@@ -118,7 +207,7 @@ class _AppointmentState extends State<Appointment> {
                     ),),
                 ),
                 Expanded(
-                  child: Text('1.00PM - 3.00PM',
+                  child: Text(app_time,
                     style: TextStyle(
                         fontSize: 16,
                         color: Colors.black38
@@ -128,6 +217,7 @@ class _AppointmentState extends State<Appointment> {
             ),
           ),
           SizedBox(height: 20,),
+
           Row(
 
             children: [
@@ -160,9 +250,28 @@ class _AppointmentState extends State<Appointment> {
                 onPressed: () => _selectDate(context),
                 child: const Text('Select date'),
               ),
+
+              SizedBox(height: 10),
+
             ],
           ),
 
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child:TextField(
+              readOnly: true,
+              controller: timeController,
+              decoration: const InputDecoration(hintText: 'Pick your Time'),
+              onTap: () async {
+                var time = await showTimePicker(
+                    context: context, initialTime: TimeOfDay.now());
+
+                if (time != null) {
+                  timeController.text = time.format(context);
+                }
+              },
+            ))
 
         ],
       ) ,

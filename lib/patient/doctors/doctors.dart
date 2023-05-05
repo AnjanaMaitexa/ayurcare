@@ -158,6 +158,8 @@ class _DoctorsListState extends State<DoctorsList> {
                         shrinkWrap:true,
                         itemCount: _loaddata.length,
                         itemBuilder: (context,index){
+
+                          int id=_loaddata[index]['id'];
                           return Card(
                             child: ListTile(
                               leading:  CircleAvatar(
@@ -172,7 +174,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   fontSize: 18,
                                 ) ,),
                               trailing: IconButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Appointment()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Appointment(id:id)));
 
                               }, icon: Icon(Icons.chevron_right)),
 

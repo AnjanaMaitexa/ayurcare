@@ -41,7 +41,7 @@ class _AddComplaintState extends State<AddComplaint> {
 
     };
     print("patient data${data}");
-    var res = await Api().authData(data,'api/patientadd_complaints');
+    var res = await Api().authData(data,'api/patient_complaints');
     var body = json.decode(res.body);
     print('res${res}');
     if(body['success']==true)

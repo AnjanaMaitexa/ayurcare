@@ -6,6 +6,7 @@ import 'package:ayurvedichospital/patient/complaints/add_complaints.dart';
 import 'package:ayurvedichospital/patient/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Complaints extends StatefulWidget {
   const Complaints({Key? key}) : super(key: key);
@@ -15,12 +16,14 @@ class Complaints extends StatefulWidget {
 }
 
 class _ComplaintsState extends State<Complaints> {
-  List complaints=["comp1","comp2","comp3","com4"];
-  List description=["desc1","desc2","desc3","desc4"];
   List _loaddisease = [];
   bool isLoading = false;
-  late int disease_id;
-
+  late SharedPreferences localStorage;
+  late int user_id;
+String complaint="";
+String dates="";
+String reply="";
+  late bool isExpanded=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -30,14 +33,20 @@ class _ComplaintsState extends State<Complaints> {
   }
 
   _fetchDisease() async {
-    var res = await Api()
-        .getData('api/patientadd_complaints');
-    if (res.statusCode == 200) {
-      var items = json.decode(res.body)['data'];
-      print(items);
-      setState(() {
-        _loaddisease = items;
+    localStorage = await SharedPreferences.getInstance();
+  user_id = (localStorage.getInt('user_id') ?? 0);
 
+  var res = await Api()
+        .getData('api/complaintsingle_view/'+user_id.toString());
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body);
+      print("items${items}");
+      setState(() {
+        complaint = items['data']['complaint'];
+
+        dates = items['data']['date'];
+        reply = items['data']['reply'].toString();
+      //  _loaddisease = items;
       });
     } else {
       setState(() {
@@ -77,10 +86,56 @@ class _ComplaintsState extends State<Complaints> {
                   ),),
                 ),
                 SizedBox(height:20),
-                ListView.builder(
+        Card(
+            child:Container(
+              child: Column(
+                  children: [
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+              Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(complaint,),
+                  Text(dates),
+                ],
+              ),
+
+
+            ),
+             Padding(
+            padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children:[
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: isExpanded?Icon(Icons.arrow_drop_up):Icon(Icons.arrow_drop_down),
+            ),
+            Visibility(
+              visible: isExpanded,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: isExpanded ? 50.0 : 0.0,
+                child:/*reply == "null"? Text("No reply available"):*/ Text(reply),
+              ),
+            )
+          ],
+        ),
+      )]
+        )]
+            )
+            )
+        )
+              /*  ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap:true,
-                  itemCount: complaints.length,
+                  itemCount: _loaddisease.length,
                   itemBuilder: (context,index){
                     return Card(
                         child:Container(
@@ -94,14 +149,36 @@ class _ComplaintsState extends State<Complaints> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(complaints[index]),
-                                        Text(description[index]),
+                                        Text(complaint,),
+                                        Text(dates),
                                       ],
                                     ),
 
 
                                   ),
-
+                                *//*  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children:[
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isExpanded = !isExpanded;
+                                            });
+                                          },
+                                          child: isExpanded?Icon(Icons.arrow_drop_up):Icon(Icons.arrow_drop_down),
+                                        ),
+                                        Visibility(
+                                          visible: isExpanded,
+                                          child: AnimatedContainer(
+                                            duration: Duration(milliseconds: 300),
+                                            height: isExpanded ? 50.0 : 0.0,
+                                            child:Text(reply),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )*//*
                                 ],
                               ),
                             ],
@@ -111,7 +188,7 @@ class _ComplaintsState extends State<Complaints> {
 
                     );
                   },
-                )
+                )*/
               ]),
         ),
 
